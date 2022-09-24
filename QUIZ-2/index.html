@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sinta Nurleta - QUIZ 2</title>
+    <style>
+      #app {
+        margin: 0;
+        margin: 50px;
+      }
+      li {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <form @submit.prevent="submitForm()">
+        <input type="text" @input="changeName($event)" v-model:value="nameInput" />
+        <input v-if="operation == 'add'" type="submit" value="add" />
+        <input v-if="operation == 'edit'" type="submit" value="Update" />
+      </form>
+
+      <ul>
+        <li v-for="user in users" v-if="user.name != null">
+          {{ user.name }}
+          <button @click="edit(users.indexOf(user))">Edit</button> ||
+          <button @click="hapus(users.indexOf(user))">Delete</button>
+        </li>
+      </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      var vm = new Vue({
+        el: "#app",
+        data: {
+          operation: "add",
+          name: "",
+          nameInput: "",
+          indexArrayUser: 0,
+          // objectName : {},
+          users: [
+            {
+              name: "Muhammad Iqbal Mubarok",
+            },
+            {
+              name: "Ruby Purwanti",
+            },
+            {
+              name: "Faqih Muhammad",
+            },
+          ],
+        },
+        methods: {
+          changeName: function ($event) {
+            if ($event.inputType != "deleteContentBackward") {
+              this.name = this.name + $event.data;
+            } else if ($event.inputType == "deleteContentBackward") {
+              this.name = this.name.slice(0, -1);
+            }
+          },
+          submitForm: function () {
+            if (this.operation == "add") {
+              // this.objectName.name = this.name
+              this.users.push({ name: this.name });
+              console.log(this.users);
+              this.name = "";
+              this.nameInput = "";
+            } else if (this.operation == "edit") {
+              this.users[this.indexArrayUser].name = this.name;
+              this.name = "";
+              this.nameInput = "";
+              this.operation = "add";
+              this.indexArrayUser = 0;
+            }
+          },
+          edit: function (index) {
+            this.operation = "edit";
+            this.nameInput = this.users[index].name;
+            this.indexArrayUser = index;
+            this.name = this.users[index].name;
+          },
+          hapus: function (index) {
+            var deleted = confirm("Anda Yakin ?");
+            if (deleted) {
+              this.users[index].name = null;
+              this.nameInput = "";
+              console.log(this.users);
+            }
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
